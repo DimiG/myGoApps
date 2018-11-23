@@ -1,0 +1,9 @@
+# This is a Test YAML config file
+#
+
+Titles:
+  Title1: "Main Page"
+  Title2: "User Page"
+  
+Message1: "This is my application message #1"
+Message2: "This is my application message #2"

@@ -19,6 +19,10 @@ Codes description
    ***Requires :*** [Go lang][golang] correctly be installed on your OS platform (see [Go lang][golang] installation manual)  
    **Note :** The [yaml.v2][yamlv2] **MUST BE** preinstalled before use by: `go get gopkg.in/yaml.v2`. And installed in your code by: `import "gopkg.in/yaml.v2"`  
 
+* `YAML`: This is improved version of `Config` above with tweaked [yaml][yaml] file.  
+   ***Requires :*** [Go lang][golang] correctly be installed on your OS platform (see [Go lang][golang] installation manual)  
+   **Note :** The [yaml.v2][yamlv2] **MUST BE** preinstalled before use by: `go get gopkg.in/yaml.v2`. And installed in your code by: `import "gopkg.in/yaml.v2"`  
+
 * `All Applications`:  
    **Note :** The [Go lang][golang] use **TABs** in code. Pay attention when you copy and paste ;)  
    ***Requires :*** [Go lang][golang] preinstalled on your OS platform.  
