@@ -23,6 +23,10 @@ Codes description
    ***Requires :*** [Go lang][golang] correctly be installed on your OS platform (see [Go lang][golang] installation manual)  
    **Note :** The [yaml.v2][yamlv2] **MUST BE** preinstalled before use by: `go get gopkg.in/yaml.v2`. And installed in your code by: `import "gopkg.in/yaml.v2"`  
 
+* `VideoToMP4`: This is a program wrapper for command line ([CLI][cli]) programs. As example this code convert video file from one format to another ([mp4][mp4]) and uses [HandBrake CLI][handbrake-cli] video converter which should be pre-installed before this code to use. See notes below for dependency installation.  
+   ***Requires :*** [Go lang][golang] correctly be installed on your OS platform (see [Go lang][golang] installation manual)  
+   **Note :** For colorized outputs the third party module [color][color] should be installed in [Go][golang] by: `go get github.com/fatih/color`. And installed in your code by: `import "github.com/fatih/color"`  
+
 * `All Applications`:  
    **Note :** The [Go lang][golang] use **TABs** in code. Pay attention when you copy and paste ;)  
    ***Requires :*** [Go lang][golang] preinstalled on your OS platform.  
@@ -39,3 +43,7 @@ This code has been written by ©2018 DimiG
 [smtp]:https://en.wikipedia.org/wiki/Simple_Mail_Transfer_Protocol
 [yaml]:https://en.wikipedia.org/wiki/YAML
 [yamlv2]:https://gopkg.in/yaml.v2
+[cli]:https://en.wikipedia.org/wiki/Command-line_interface
+[handbrake-cli]:https://handbrake.fr/downloads2.php
+[mp4]:https://en.wikipedia.org/wiki/MPEG-4_Part_14
+[color]:https://github.com/fatih/color
