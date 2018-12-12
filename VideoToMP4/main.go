@@ -2,7 +2,7 @@
  * ========================================================================
  *  File: main.go
  *  Creator: Dmitri G.
- *  Date: 2018-12-11
+ *  Date: 2018-12-12
  *  Description: This is a main application file written in Golang.
  *  It used as program wrapper for Hadbrake-Cli
  * ========================================================================
@@ -26,6 +26,7 @@ import (
 
 // *** VARIABLES ***
 var (
+	core      = "HandBrakeCLI"
 	encoder   = "x264"
 	quality   = "20"
 	a_bitrate = "160"
@@ -37,12 +38,14 @@ func checkExeExists(exe string) {
 	// Check if main program preinstalled on local system
 	_, err := exec.LookPath(exe)
 	if err != nil {
+		color.Set(color.FgRed, color.Bold) // Set color
 		fmt.Printf("Didn't find CORE executable\n")
+		color.Unset() // Unset color
 		log.Fatal("BYE\n")
 	}
 }
 
-func execute() {
+func execute(exe string) {
 	// Encoding algorithm
 	var stdoutBuf, stderrBuf bytes.Buffer
 	args := os.Args[1:]
@@ -50,8 +53,10 @@ func execute() {
 	if len(args) < 1 {
 		color.Set(color.FgYellow) // Set yellow color
 		fmt.Println("Arguments ARE EMPTY!")
-		fmt.Println("USE: videotomp4.exe [FileName]")
-		fmt.Println("OR PLEASE DROP THE VIDEO FILE ONTO THE PROGRAM ICON!!!")
+		fmt.Println("USE: " + exe + " [FileName]")
+		fmt.Println()
+		fmt.Println("OR PLEASE DROP THE VIDEO FILE")
+		fmt.Println("=> ONTO THE PROGRAM ICON in WINDOWS!!!")
 		fmt.Println()
 		fmt.Println("Author: Dmitri G. (2019)")
 		fmt.Println()
@@ -68,7 +73,7 @@ func execute() {
 	outname := dir + name + "_H264_AAC.mp4"
 
 	// Invoke the command with arguments
-	cmd := exec.Command("handbrakecli.exe", "-i", args[0], "-o", outname,
+	cmd := exec.Command(exe, "-i", args[0], "-o", outname,
 		"-e", encoder, "-q", quality, "-B", a_bitrate, "--crop", crop)
 
 	stdoutIn, _ := cmd.StdoutPipe()
@@ -112,19 +117,19 @@ func execute() {
 
 // *** MAIN FUNCTION ***
 func main() {
-	checkExeExists("handbrakecli.exe")
+	core_w := core + ".exe"
 
 	if runtime.GOOS == "windows" {
-		execute()
-	} else {
-		color.Set(color.FgRed, color.Bold) // Set color
-		fmt.Println("Can't execute this on a NON WINDOWS machine ;)")
-		color.Unset() // Unset color
-	}
+		checkExeExists(core_w)
+		execute(core_w)
 
-	/*** PAUSE ***/
-	color.Set(color.FgMagenta, color.Bold) // Set color
-	fmt.Println("PRESS THE `ENTER` KEY TO TERMINATE THE CONSOLE SCREEN!")
-	color.Unset() // Unset color
-	fmt.Scanln()
+		/*** PAUSE ***/
+		color.Set(color.FgMagenta, color.Bold) // Set color
+		fmt.Println("PRESS THE `ENTER` KEY TO TERMINATE THE CONSOLE SCREEN!")
+		color.Unset() // Unset color
+		fmt.Scanln()
+	} else {
+		checkExeExists(core)
+		execute(core)
+	}
 }
