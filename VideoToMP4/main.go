@@ -2,7 +2,8 @@
  * ========================================================================
  *  File: main.go
  *  Creator: Dmitri G.
- *  Date: 2018-12-12
+ *  Date: 2018-12-17
+ *  Version: 1.0.1
  *  Description: This is a main application file written in Golang.
  *  It used as program wrapper for Hadbrake-Cli
  * ========================================================================
@@ -12,6 +13,7 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"github.com/fatih/color"
 	"io"
@@ -31,12 +33,29 @@ var (
 	quality   = "20"
 	a_bitrate = "160"
 	crop      = "0:0:0:0"
+	height    = "720"
 )
 
 // *** FUNCTIONS ***
-func checkExeExists(exe string) {
+func helpMsg(cmdName string) {
+	fmt.Println()
+	color.Set(color.FgYellow) // Set yellow color
+	fmt.Println("Arguments ARE EMPTY!")
+	fmt.Println()
+	fmt.Println("USE: " + cmdName + " -hd" + " [FileName] " + ": Resize to 720p")
+	fmt.Println("     " + cmdName + "     [FileName] " + ": Size same as source")
+	fmt.Println()
+	fmt.Println("OR PLEASE DROP THE VIDEO FILE")
+	fmt.Println("=> ONTO THE PROGRAM ICON in WINDOWS!!!")
+	fmt.Println()
+	fmt.Println("Author: Dmitri G. (2019)")
+	fmt.Println()
+	color.Unset() // Unset color
+}
+
+func checkExeExists(cmdName string) {
 	// Check if main program preinstalled on local system
-	_, err := exec.LookPath(exe)
+	_, err := exec.LookPath(cmdName)
 	if err != nil {
 		color.Set(color.FgRed, color.Bold) // Set color
 		fmt.Printf("Didn't find CORE executable\n")
@@ -45,41 +64,66 @@ func checkExeExists(exe string) {
 	}
 }
 
-func execute(exe string) {
+func execute(cmdName string) {
 	// Encoding algorithm
 	var stdoutBuf, stderrBuf bytes.Buffer
+	var cmdArgs []string
+
+	sizePtr := flag.Bool("hd", false, "Resize to 720p")
+
 	args := os.Args[1:]
 
-	if len(args) < 1 {
+	flag.Usage = func() {
 		color.Set(color.FgYellow) // Set yellow color
-		fmt.Println("Arguments ARE EMPTY!")
-		fmt.Println("USE: " + exe + " [FileName]")
 		fmt.Println()
-		fmt.Println("OR PLEASE DROP THE VIDEO FILE")
-		fmt.Println("=> ONTO THE PROGRAM ICON in WINDOWS!!!")
+		fmt.Printf("Usage of %s:\n", cmdName)
 		fmt.Println()
-		fmt.Println("Author: Dmitri G. (2019)")
+		fmt.Printf(" -hd [FileName] : Resize to 720p\n")
+		fmt.Printf("     [FileName] : Size same as source\n")
 		fmt.Println()
 		color.Unset() // Unset color
+	}
+
+	flag.Parse()
+
+	// Decision Block
+	switch {
+	case len(args) < 1:
+		helpMsg(cmdName)
 		return
+
+	case len(args) == 1:
+		dir, fn := path.Split(args[0])
+		name := strings.TrimSuffix(fn, filepath.Ext(fn))
+		outname := dir + name + "_H264_AAC.mp4"
+		cmdArgs = []string{"-i", args[0], "-o", outname, "-e", encoder,
+			"-q", quality, "-B", a_bitrate, "--crop", crop}
+
+	case len(args) > 2:
+		helpMsg(cmdName)
+		return
+	}
+
+	if *sizePtr {
+		dir, fn := path.Split(args[1])
+		name := strings.TrimSuffix(fn, filepath.Ext(fn))
+		outname := dir + name + "_H264_AAC.mp4"
+		cmdArgs = []string{"-i", args[1], "-o", outname, "-e", encoder,
+			"-q", quality, "-l", height, "-B", a_bitrate, "--crop", crop}
 	}
 
 	color.Set(color.FgYellow)                                // Set yellow color
 	fmt.Println("File encoding in PROGRESS. Wait PLEASE...") // Print message
 	color.Unset()                                            // Unset color
-	dir, fn := path.Split(args[0])
-
-	name := strings.TrimSuffix(fn, filepath.Ext(fn))
-	outname := dir + name + "_H264_AAC.mp4"
 
 	// Invoke the command with arguments
-	cmd := exec.Command(exe, "-i", args[0], "-o", outname,
-		"-e", encoder, "-q", quality, "-B", a_bitrate, "--crop", crop)
+	cmd := exec.Command(cmdName, cmdArgs...)
 
 	stdoutIn, _ := cmd.StdoutPipe()
 	stderrIn, _ := cmd.StderrPipe()
 
 	var errStdout, errStderr error
+
 	stdout := io.MultiWriter(os.Stdout, &stdoutBuf)
 	stderr := io.MultiWriter(os.Stderr, &stderrBuf)
 	err := cmd.Start()
@@ -125,7 +169,7 @@ func main() {
 
 		/*** PAUSE ***/
 		color.Set(color.FgMagenta, color.Bold) // Set color
-		fmt.Println("PRESS THE `ENTER` KEY TO TERMINATE THE CONSOLE SCREEN!")
+		fmt.Println("PRESS THE `Enter` KEY TO TERMINATE THE CONSOLE SCREEN!")
 		color.Unset() // Unset color
 		fmt.Scanln()
 	} else {

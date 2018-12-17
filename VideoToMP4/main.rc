@@ -1,8 +1,8 @@
 #define RT_MANIFEST 24
 
 1 VERSIONINFO
-FILEVERSION     1,0,0,0
-PRODUCTVERSION  1,0,0,0
+FILEVERSION     1,0,1,0
+PRODUCTVERSION  1,0,1,0
 FILEFLAGSMASK   0X3FL
 FILEFLAGS       0L
 FILEOS          0X40004L
@@ -15,12 +15,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "©Private Co., Ltd."
             VALUE "FileDescription", "Small MP4 Video Converter"
-            VALUE "FileVersion", "v1.0.0.0"
+            VALUE "FileVersion", "v1.0.1.0"
             VALUE "InternalName", "Video Converter"
             VALUE "LegalCopyright", "Dimi G."
             VALUE "OriginalFilename", "video2mp4.exe"
             VALUE "ProductName", "Video 2 MP4"
-            VALUE "ProductVersion", "v1.0.0.0"
+            VALUE "ProductVersion", "v1.0.1.0"
         END
     END
     BLOCK "VarFileInfo"
